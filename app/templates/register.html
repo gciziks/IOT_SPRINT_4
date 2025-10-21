@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Registrar - BetCare{% endblock %}
+{% block content %}
+<h2>Registrar</h2>
+<form method="post" action="{{ url_for('auth.register_post') }}">
+  <label>
+    Usuário
+    <input type="text" name="username" required>
+  </label>
+  <label>
+    Email
+    <input type="email" name="email" required>
+  </label>
+  <label>
+    Senha
+    <input type="password" name="password" required>
+  </label>
+
+  <details>
+    <summary>Capturar biometria facial (opcional)</summary>
+    <div>
+      <video id="regVideo" class="camera" autoplay playsinline></video>
+      <canvas id="regCanvas" class="camera" style="display:none"></canvas>
+      <input type="hidden" name="face_data" id="regFaceData">
+      <button type="button" id="btnRegCapture">Capturar rosto</button>
+    </div>
+  </details>
+
+  <button type="submit">Registrar</button>
+</form>
+<script src="{{ url_for('static', filename='js/webcam.js') }}"></script>
+<script>
+  setupWebcam('regVideo');
+  document.getElementById('btnRegCapture').addEventListener('click', function() {
+    const dataUrl = captureFace('regVideo', 'regCanvas');
+    document.getElementById('regFaceData').value = dataUrl;
+    this.textContent = 'Rosto capturado';
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,14 @@
+Flask
+Flask-Login
+Flask-SQLAlchemy
+python-dotenv
+Werkzeug
+SQLAlchemy
+itsdangerous
+Jinja2
+opencv-python
+numpy
+Pillow
+DeepFace
+tensorflow
+requests

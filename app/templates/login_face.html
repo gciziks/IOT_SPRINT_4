@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Login Facial - BetCare{% endblock %}
+{% block content %}
+<h2>Login por Reconhecimento Facial</h2>
+<div>
+  <video id="faceVideo" class="camera" autoplay playsinline></video>
+  <canvas id="faceCanvas" class="camera" style="display:none"></canvas>
+</div>
+<button id="btnLoginFace">Entrar com meu rosto</button>
+<p id="msg"></p>
+<script src="{{ url_for('static', filename='js/webcam.js') }}"></script>
+<script>
+  setupWebcam('faceVideo');
+  document.getElementById('btnLoginFace').addEventListener('click', async function() {
+    const dataUrl = captureFace('faceVideo', 'faceCanvas');
+    document.getElementById('msg').textContent = 'Processando...';
+    const res = await fetch('{{ url_for('auth.login_face_post') }}', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ face_data: dataUrl })
+    });
+    const json = await res.json().catch(() => ({}));
+    if (json.ok) {
+      window.location.href = json.redirect;
+    } else {
+      document.getElementById('msg').textContent = json.message || 'Falha no reconhecimento';
+    }
+  });
+</script>
+{% endblock %}

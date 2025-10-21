@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Controle de Vícios de Aposta{% endblock %}</title>
+  <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@2.0.6/css/pico.min.css">
+  <style>
+    .camera { width: 320px; aspect-ratio: 4/3; background: #000; }
+    .flash { margin: 0.5rem 0; }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <nav>
+      <ul>
+        <li><strong>BetCare</strong></li>
+      </ul>
+      <ul>
+        {% if current_user.is_authenticated %}
+        <li>Olá, <strong>{{ current_user.username }}</strong></li>
+        <li><a href="{{ url_for('main.dashboard') }}">Dashboard</a></li>
+        <li>
+          <form action="{{ url_for('auth.logout') }}" method="post">
+            <button type="submit" class="secondary">Sair</button>
+          </form>
+        </li>
+        {% else %}
+        <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+        <li><a href="{{ url_for('auth.register') }}">Registrar</a></li>
+        {% endif %}
+      </ul>
+    </nav>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>
